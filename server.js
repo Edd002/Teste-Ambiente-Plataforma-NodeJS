@@ -1,14 +1,16 @@
-const http = require('http');
+const express = require('express')
+const app = express()
 
-const hostname = '127.0.0.1';
-const port = 3000;
+app.use(express.urlencoded({ extended: true })) // Processa o body em formato UrlEncoded
+app.use(express.json()) // Processa o body em formato json
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Eduardo Augusto Lima Pereira');
-});
+app.use((req, res, next) => {
+    let data_req = new Date();
+    console.log(`${data_req.toLocaleString()} - ${req.path} - ${req.get('content-type')}`);
+    res.status(200).send('Eduardo Augusto Lima Pereira');
+})
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+const PORTA = process.env.PORT || 3000 // Se não achar PORT definido como variável de ambiente, utilizar 3000
+app.listen (PORTA, () => {
+    console.log(`Servidor rodando em http://localhost:${PORTA}`);
+})
